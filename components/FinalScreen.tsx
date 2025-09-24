@@ -57,7 +57,7 @@ interface InfoTileProps {
 }
 
 const InfoTile: React.FC<InfoTileProps> = ({ icon, iconBg, title, description }) => (
-    <a href="#" className="box-border flex flex-row items-center p-4 gap-4 w-full h-[92px] bg-white border border-[#EBEBF0] rounded-lg transition-colors hover:bg-gray-50 group">
+    <a href="#" className="box-border flex flex-row items-center p-4 gap-4 w-full h-[92px] bg-white border border-[#EBEBF0] rounded-lg transition-colors hover:border-[#5A59E7] group">
         <div className="flex-grow flex items-center gap-4">
             <div className={`flex items-center justify-center w-[60px] h-[60px] min-w-[60px] rounded-xl ${iconBg}`}>
                 {icon}
@@ -67,7 +67,7 @@ const InfoTile: React.FC<InfoTileProps> = ({ icon, iconBg, title, description })
                 <p className="text-sm text-[#676770]">{description}</p>
             </div>
         </div>
-        <div className="w-10 h-10 flex justify-center items-center rounded transition-colors group-hover:bg-gray-200/50">
+        <div className="w-10 h-10 flex justify-center items-center rounded transition-colors">
              <ChevronRightIcon />
         </div>
     </a>
