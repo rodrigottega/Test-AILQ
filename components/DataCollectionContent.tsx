@@ -133,7 +133,7 @@ const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions
                             <div className={`relative w-4 h-4 rounded-full border flex-shrink-0 transition-colors ${isSelected ? 'border-[#6464FF]' : 'border-[#D5D5DE]'}`}>
                                 {isSelected && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#6464FF] rounded-full"></div>}
                             </div>
-                            <span className="text-sm font-medium text-gray-800">{`Guardar en ${name}`}</span>
+                            <span className="text-sm font-medium text-gray-800 whitespace-nowrap">{`Guardar en ${name}`}</span>
                         </label>
                     );
                 })}

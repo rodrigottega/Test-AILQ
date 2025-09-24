@@ -47,7 +47,7 @@ const AgentCreatorHeader: React.FC<AgentCreatorHeaderProps> = ({ onSaveAndContin
             <button
                 onClick={handleSaveClick}
                 disabled={isSaving}
-                className="flex h-9 w-[160px] items-center justify-center rounded bg-[#6464FF] px-4 text-sm font-medium text-white transition-colors hover:bg-[#7474FF] active:bg-[#5050DD] disabled:bg-[#A6A6FF] disabled:cursor-not-allowed"
+                className="flex h-9 w-[160px] items-center justify-center rounded bg-[#6464FF] px-4 text-sm font-medium text-white transition-colors hover:bg-[#7474FF] active:bg-[#5050DD] disabled:bg-[#A6A6FF] disabled:cursor-not-allowed whitespace-nowrap"
             >
                 {isSaving ? <ButtonSpinnerIcon /> : 'Guardar y continuar'}
             </button>
