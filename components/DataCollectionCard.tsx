@@ -13,7 +13,7 @@ interface DataCollectionCardProps {
 }
 
 const DataCollectionCard: React.FC<DataCollectionCardProps> = ({ instruction, setInstruction, onCreateAgent, isHighlighting, isTyping, textareaRef }) => {
-  const exampleData = ["Nombre", "Email", "País / Región", "Fecha de nacimiento", "Producto / Interés"];
+  const exampleData = ["Nombre", "Email", "País / Región", "Fecha de nacimiento", "Producto"];
 
   const placeholders = [
     "Recolectar nombre y correo electrónico.",
