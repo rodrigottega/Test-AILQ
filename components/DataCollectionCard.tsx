@@ -55,7 +55,7 @@ const DataCollectionCard: React.FC<DataCollectionCardProps> = ({ instruction, se
                 key={item}
                 onClick={() => handleExampleClick(item)}
                 disabled={isTyping}
-                className="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                className="px-2.5 py-1 text-sm border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                 {item}
                 </button>
