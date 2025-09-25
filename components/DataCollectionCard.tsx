@@ -49,13 +49,13 @@ const DataCollectionCard: React.FC<DataCollectionCardProps> = ({ instruction, se
         />
         
         {/* Examples Section */}
-        <div className="flex flex-wrap justify-center gap-2 w-full">
+        <div className="flex items-center justify-center gap-2 w-full overflow-x-auto pb-2">
             {exampleData.map((item) => (
                 <button
                 key={item}
                 onClick={() => handleExampleClick(item)}
                 disabled={isTyping}
-                className="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 text-sm border border-gray-300 rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                 {item}
                 </button>
