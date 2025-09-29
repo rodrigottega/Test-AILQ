@@ -8,6 +8,7 @@ import LoadingScreen from './components/LoadingScreen';
 import { Question } from './components/DataCollectionContent';
 import FinalScreen from './components/FinalScreen';
 import TemplateCard, { Template } from './components/TemplateCard';
+import SaveDataModal from './components/SaveDataModal';
 
 const templates: Template[] = [
     {
@@ -44,15 +45,11 @@ function App(): JSX.Element {
   const [isAgentFinalized, setIsAgentFinalized] = React.useState(false);
   const [url, setUrl] = React.useState('');
   const [questions, setQuestions] = React.useState<Question[]>([]);
+  const [selectedIntegration, setSelectedIntegration] = React.useState<'HubSpot' | 'Sheets' | 'Treble'>('HubSpot');
   const [isHighlighting, setIsHighlighting] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-
-  const handleNext = () => {
-    if (instruction.trim() !== '') {
-      setStep(2);
-    }
-  };
+  const [showSaveModal, setShowSaveModal] = React.useState(false);
 
   const handleTemplateClick = (fields: string[]) => {
     if (isTyping || !fields || fields.length === 0) return;
@@ -106,27 +103,28 @@ function App(): JSX.Element {
     return fields;
   };
 
-  const handleCreateAgent = () => {
-    const fields = parseInstructionToFields(instruction);
+  const processInstructionAndShowModal = () => {
+    if (instruction.trim() !== '') {
+        const fields = parseInstructionToFields(instruction);
         
-    let newQuestions: Question[];
+        const newQuestions: Question[] = (fields.length > 0 ? fields : ['Nombre', 'Email'])
+            .map((field, index) => ({
+                id: Date.now() + index,
+                text: field.charAt(0).toUpperCase() + field.slice(1),
+                saveTo: '',
+            }));
 
-    if (fields.length > 0) {
-        newQuestions = fields.map((field, index) => ({
-            id: Date.now() + index,
-            text: `Pregunta amablemente por el ${field.toLowerCase()} del cliente`,
-            saveTo: '',
-        }));
-    } else {
-        // Fallback to default questions if parsing fails or returns no fields
-        newQuestions = [
-            { id: 1, text: 'Pregunta amablemente por el nombre del cliente', saveTo: '' },
-            { id: 2, text: 'Pregunta amablemente por el email del cliente', saveTo: '' },
-            { id: 3, text: 'Pregunta amablemente por la fecha de nacimiento del cliente', saveTo: '' },
-        ];
+        setQuestions(newQuestions);
+        setShowSaveModal(true);
     }
+  };
 
-    setQuestions(newQuestions);
+  const handleModalContinue = () => {
+    setShowSaveModal(false);
+    setStep(2); // Proceed to knowledge base screen
+  };
+
+  const handleCreateAgent = () => {
     setIsCreatingAgent(true);
   };
 
@@ -148,7 +146,7 @@ function App(): JSX.Element {
   }
 
   if (isAgentCreated) {
-    return <AgentCreatorScreen url={url} setUrl={setUrl} questions={questions} setQuestions={setQuestions} onSaveAndContinue={handleSaveAndContinue} />;
+    return <AgentCreatorScreen url={url} setUrl={setUrl} questions={questions} setQuestions={setQuestions} onSaveAndContinue={handleSaveAndContinue} selectedIntegration={selectedIntegration} setSelectedIntegration={setSelectedIntegration} />;
   }
 
   return (
@@ -168,7 +166,7 @@ function App(): JSX.Element {
                     <DataCollectionCard 
                         instruction={instruction}
                         setInstruction={setInstruction}
-                        onCreateAgent={handleNext}
+                        onCreateAgent={processInstructionAndShowModal}
                         isHighlighting={isHighlighting}
                         isTyping={isTyping}
                         textareaRef={textareaRef}
@@ -197,6 +195,17 @@ function App(): JSX.Element {
           />
         )}
       </main>
+      {showSaveModal && (
+        <SaveDataModal
+          isOpen={showSaveModal}
+          onClose={() => setShowSaveModal(false)}
+          onContinue={handleModalContinue}
+          questions={questions}
+          setQuestions={setQuestions}
+          selectedIntegration={selectedIntegration}
+          setSelectedIntegration={setSelectedIntegration}
+        />
+      )}
     </div>
   );
 }

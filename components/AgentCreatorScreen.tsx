@@ -13,9 +13,11 @@ interface AgentCreatorScreenProps {
   questions: Question[];
   setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
   onSaveAndContinue: () => void;
+  selectedIntegration: 'HubSpot' | 'Sheets' | 'Treble';
+  setSelectedIntegration: React.Dispatch<React.SetStateAction<'HubSpot' | 'Sheets' | 'Treble'>>;
 }
 
-const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ url, setUrl, questions, setQuestions, onSaveAndContinue }) => {
+const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ url, setUrl, questions, setQuestions, onSaveAndContinue, selectedIntegration, setSelectedIntegration }) => {
   const [activeTab, setActiveTab] = React.useState('Datos para recolectar');
   const [showModal, setShowModal] = React.useState(false);
 
@@ -40,7 +42,7 @@ const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ url, setUrl, qu
         >
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className="flex-grow h-full rounded overflow-hidden">
-                {activeTab === 'Datos para recolectar' && <DataCollectionContent questions={questions} setQuestions={setQuestions} />}
+                {activeTab === 'Datos para recolectar' && <DataCollectionContent questions={questions} setQuestions={setQuestions} selectedIntegration={selectedIntegration} setSelectedIntegration={setSelectedIntegration} />}
                 {activeTab === 'Instrucciones generales' && <GeneralInstructionsContent />}
                 {activeTab === 'Base de conocimiento' && <KnowledgeBaseContent url={url} setUrl={setUrl} />}
             </div>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import QuestionBlock from './QuestionBlock';
 import { PlusIcon } from './icons/PlusIcon';
+import { InfoIcon } from './icons/InfoIcon';
 
 export interface Question {
     id: number;
@@ -11,6 +12,8 @@ export interface Question {
 interface DataCollectionContentProps {
     questions: Question[];
     setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
+    selectedIntegration: 'HubSpot' | 'Sheets' | 'Treble';
+    setSelectedIntegration: React.Dispatch<React.SetStateAction<'HubSpot' | 'Sheets' | 'Treble'>>;
 }
 
 const integrationOptions = {
@@ -23,7 +26,6 @@ const integrationOptions = {
         '{{hubspot_birthdate}}',
         '{{hubspot_text}}',
         '{{hubspot_number}}',
-        '{{hubspot_other}}',
     ],
     Sheets: [
         '{{sheets_column_a}}',
@@ -44,41 +46,21 @@ const integrationOptions = {
     ],
 };
 
-const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions, setQuestions }) => {
-    const [selectedIntegration, setSelectedIntegration] = React.useState<'HubSpot' | 'Sheets' | 'Treble'>('HubSpot');
+const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions, setQuestions, selectedIntegration, setSelectedIntegration }) => {
     const integrations: ('HubSpot' | 'Sheets' | 'Treble')[] = ['HubSpot', 'Sheets', 'Treble'];
+    const [exampleQuestion, setExampleQuestion] = React.useState('¿Me podrías compartir tu nombre por favor?');
 
-    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-    const [showShadow, setShowShadow] = React.useState(false);
-
+    const isInitialMount = React.useRef(true);
+    
     React.useEffect(() => {
-        const checkScrollability = () => {
-            const element = scrollContainerRef.current;
-            if (element) {
-                const isScrollable = element.scrollHeight > element.clientHeight;
-                setShowShadow(isScrollable);
-            }
-        };
-
-        // Initial check
-        checkScrollability();
-
-        // Check on window resize
-        window.addEventListener('resize', checkScrollability);
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('resize', checkScrollability);
-        };
-    }, [questions]); // Re-run when questions change
-
-    React.useEffect(() => {
-        // When integration changes, reset the saveTo field for all questions
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
         setQuestions(prevQuestions => prevQuestions.map(q => ({ ...q, saveTo: '' })));
     }, [selectedIntegration, setQuestions]);
 
-
-    const handleQuestionChange = (id: number, newText: string) => {
+    const handleQuestionTextChange = (id: number, newText: string) => {
         setQuestions(questions.map(q => q.id === id ? { ...q, text: newText } : q));
     };
 
@@ -99,7 +81,7 @@ const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions
         setQuestions(newQuestions);
     };
 
-    const handleAddQuestion = () => {
+    const handleAddData = () => {
         const newQuestion: Question = {
             id: Date.now(),
             text: '',
@@ -109,69 +91,86 @@ const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions
     };
 
     return (
-        <div className="flex flex-col h-full w-full max-w-[576px]">
-            {/* Section Title */}
-            <div className="flex flex-col items-start gap-2 self-stretch flex-shrink-0">
-                <h2 className="text-base font-medium text-gray-900">Datos que el Agente IA debe recolectar</h2>
-                <p className="text-sm text-gray-600">El Agente IA recolecta información a través de preguntas.</p>
-            </div>
-            
-            {/* Radio Wrapper */}
-            <div className="flex flex-row items-start gap-2 self-stretch mt-6 flex-shrink-0">
-                {integrations.map(name => {
-                    const isSelected = selectedIntegration === name;
-                    return (
-                        <label key={name} className={`box-border flex-1 flex flex-row items-center p-3 gap-2.5 rounded border cursor-pointer transition-colors ${isSelected ? 'border-[#6464FF] bg-white' : 'border-[#EBEBF0] bg-white hover:bg-gray-50'}`}>
-                            <input 
-                                type="radio" 
-                                name="integration" 
-                                value={name}
-                                checked={isSelected}
-                                onChange={() => setSelectedIntegration(name)}
-                                className="hidden"
-                            />
-                            <div className={`relative w-4 h-4 rounded-full border flex-shrink-0 transition-colors ${isSelected ? 'border-[#6464FF]' : 'border-[#D5D5DE]'}`}>
-                                {isSelected && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#6464FF] rounded-full"></div>}
-                            </div>
-                            <span className="text-sm font-medium text-gray-800 whitespace-nowrap">{`Guardar en ${name}`}</span>
-                        </label>
-                    );
-                })}
+        <div className="flex flex-col h-full w-full max-w-[576px] gap-4">
+            {/* Top Box for Example Question */}
+            <div className="box-border flex flex-col items-start p-4 gap-4 self-stretch bg-[#FAFAFC] border border-[#EBEBF0] rounded-lg">
+                <div className="flex flex-col items-start gap-1 self-stretch">
+                    <h3 className="text-sm font-medium text-gray-900">El Agente IA hará preguntas para recolectar los datos.</h3>
+                </div>
+                <div className="flex flex-col items-start gap-1 self-stretch">
+                    <label htmlFor="example-question" className="flex items-center gap-1 text-sm text-gray-700">
+                        Ejemplo de cómo debe formular las preguntas el Agente IA
+                        <InfoIcon className="h-4 w-4 text-gray-400" />
+                    </label>
+                    <input
+                        id="example-question"
+                        type="text"
+                        value={exampleQuestion}
+                        onChange={(e) => setExampleQuestion(e.target.value)}
+                        className="box-border flex items-center px-3 py-2 w-full h-9 border border-[#D5D5DE] rounded bg-white placeholder-gray-400 text-sm focus:border-[#6464FF] outline-none"
+                    />
+                </div>
             </div>
 
-            {/* Scrollable Questions and Sticky Button Container */}
-            <div ref={scrollContainerRef} className="flex-grow mt-4 overflow-y-auto relative">
-                <div className="flex flex-col items-start gap-3 self-stretch pr-2">
-                    {questions.map((question, index) => (
-                        <QuestionBlock 
-                            key={question.id}
-                            question={question}
-                            index={index}
-                            totalQuestions={questions.length}
-                            onDelete={() => handleDeleteQuestion(question.id)}
-                            onTextChange={(newText) => handleQuestionChange(question.id, newText)}
-                            onSaveToChange={(newSaveTo) => handleSaveToChange(question.id, newSaveTo)}
-                            onMove={handleMove}
-                            canBeDeleted={questions.length > 1}
-                            saveToOptions={integrationOptions[selectedIntegration]}
-                        />
-                    ))}
+            {/* Bottom Box for Data Mapping */}
+            <div className="box-border flex flex-col items-start p-4 gap-6 self-stretch bg-[#FAFAFC] border border-[#EBEBF0] rounded-lg flex-grow min-h-0">
+                 <div className="flex flex-col items-start gap-2 self-stretch">
+                    <h3 className="text-sm font-medium text-gray-900">¿Donde se deben guardar los datos recolectados?</h3>
+                 </div>
+                 {/* Radio Wrapper */}
+                <div className="flex flex-row items-start gap-2 self-stretch">
+                    {integrations.map(name => {
+                        const isSelected = selectedIntegration === name;
+                        return (
+                            <label key={name} className={`box-border flex-1 flex flex-row items-center p-3 gap-2.5 rounded border cursor-pointer transition-colors ${isSelected ? 'border-[#6464FF] bg-white' : 'border-[#EBEBF0] bg-white hover:bg-gray-50'}`}>
+                                <input 
+                                    type="radio" 
+                                    name="integration" 
+                                    value={name}
+                                    checked={isSelected}
+                                    onChange={() => setSelectedIntegration(name)}
+                                    className="hidden"
+                                />
+                                <div className={`relative w-4 h-4 rounded-full border flex-shrink-0 transition-colors ${isSelected ? 'border-[#6464FF]' : 'border-[#D5D5DE]'}`}>
+                                    {isSelected && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#6464FF] rounded-full"></div>}
+                                </div>
+                                <span className="text-sm font-medium text-gray-800 whitespace-nowrap">{name}</span>
+                            </label>
+                        );
+                    })}
                 </div>
 
-                 {/* Button Wrapper */}
-                <div 
-                    className="sticky bottom-0 pt-4 bg-white pr-2"
-                    style={showShadow ? {boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.05)'} : {}}
-                >
+                {/* Scrollable Questions Container */}
+                <div className="flex-grow w-full overflow-y-auto relative">
+                    <div className="flex flex-col items-start gap-3 self-stretch">
+                        {questions.map((question, index) => (
+                            <QuestionBlock 
+                                key={question.id}
+                                question={question}
+                                index={index}
+                                totalQuestions={questions.length}
+                                onDelete={() => handleDeleteQuestion(question.id)}
+                                onTextChange={(newText) => handleQuestionTextChange(question.id, newText)}
+                                onSaveToChange={(newSaveTo) => handleSaveToChange(question.id, newSaveTo)}
+                                onMove={handleMove}
+                                canBeDeleted={questions.length > 1}
+                                saveToOptions={integrationOptions[selectedIntegration]}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Button Wrapper */}
+                <div className="w-full flex-shrink-0">
                     <button
-                        onClick={handleAddQuestion}
+                        onClick={handleAddData}
                         className="box-border flex flex-row justify-center items-center px-3 gap-1 w-full h-10 min-h-[40px] max-h-[40px] bg-white border border-[#D5D5DE] rounded hover:bg-gray-50 transition-colors text-sm font-medium text-gray-800"
                         style={{
                             boxShadow: '0px 5px 2px rgba(182, 182, 194, 0.01), 0px 3px 2px rgba(182, 182, 194, 0.05), 0px 1px 1px rgba(182, 182, 194, 0.09), 0px 0px 1px rgba(182, 182, 194, 0.1)',
                         }}
                     >
                         <PlusIcon />
-                        <span>Agregar pregunta</span>
+                        <span>Agregar dato</span>
                     </button>
                 </div>
             </div>
