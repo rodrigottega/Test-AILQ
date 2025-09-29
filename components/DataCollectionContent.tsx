@@ -1,7 +1,6 @@
 import * as React from 'react';
 import QuestionBlock from './QuestionBlock';
 import { PlusIcon } from './icons/PlusIcon';
-import { InfoIcon } from './icons/InfoIcon';
 
 export interface Question {
     id: number;
@@ -48,7 +47,6 @@ const integrationOptions = {
 
 const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions, setQuestions, selectedIntegration, setSelectedIntegration }) => {
     const integrations: ('HubSpot' | 'Sheets' | 'Treble')[] = ['HubSpot', 'Sheets', 'Treble'];
-    const [exampleQuestion, setExampleQuestion] = React.useState('¿Me podrías compartir tu nombre por favor?');
 
     const isInitialMount = React.useRef(true);
     
@@ -91,28 +89,8 @@ const DataCollectionContent: React.FC<DataCollectionContentProps> = ({ questions
     };
 
     return (
-        <div className="flex flex-col h-full w-full max-w-[576px] gap-4">
-            {/* Top Box for Example Question */}
-            <div className="box-border flex flex-col items-start p-4 gap-4 self-stretch bg-[#FAFAFC] border border-[#EBEBF0] rounded-lg">
-                <div className="flex flex-col items-start gap-1 self-stretch">
-                    <h3 className="text-sm font-medium text-gray-900">El Agente IA hará preguntas para recolectar los datos.</h3>
-                </div>
-                <div className="flex flex-col items-start gap-1 self-stretch">
-                    <label htmlFor="example-question" className="flex items-center gap-1 text-sm text-gray-700">
-                        Ejemplo de cómo debe formular las preguntas el Agente IA
-                        <InfoIcon className="h-4 w-4 text-gray-400" />
-                    </label>
-                    <input
-                        id="example-question"
-                        type="text"
-                        value={exampleQuestion}
-                        onChange={(e) => setExampleQuestion(e.target.value)}
-                        className="box-border flex items-center px-3 py-2 w-full h-9 border border-[#D5D5DE] rounded bg-white placeholder-gray-400 text-sm focus:border-[#6464FF] outline-none"
-                    />
-                </div>
-            </div>
-
-            {/* Bottom Box for Data Mapping */}
+        <div className="flex flex-col h-full w-full max-w-[576px]">
+            {/* Box for Data Mapping */}
             <div className="box-border flex flex-col items-start p-4 gap-6 self-stretch bg-[#FAFAFC] border border-[#EBEBF0] rounded-lg flex-grow min-h-0">
                  <div className="flex flex-col items-start gap-2 self-stretch">
                     <h3 className="text-sm font-medium text-gray-900">¿Donde se deben guardar los datos recolectados?</h3>

@@ -37,7 +37,8 @@ const templates: Template[] = [
     },
 ];
 
-function App(): JSX.Element {
+// Fix: Changed function declaration to a const with React.FC type to resolve "Cannot find namespace 'JSX'" error and align with component patterns in the project.
+const App: React.FC = () => {
   const [step, setStep] = React.useState(1);
   const [instruction, setInstruction] = React.useState('');
   const [isCreatingAgent, setIsCreatingAgent] = React.useState(false);
@@ -208,6 +209,6 @@ function App(): JSX.Element {
       )}
     </div>
   );
-}
+};
 
 export default App;
