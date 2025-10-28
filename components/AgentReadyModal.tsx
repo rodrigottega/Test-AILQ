@@ -26,7 +26,7 @@ const AgentReadyModal: React.FC<AgentReadyModalProps> = ({ onClose }) => {
         <div className="flex flex-col items-center text-center px-6 pt-16 pb-6 gap-6">
           <p className="text-[64px] leading-[64px] text-[#676770] text-center self-stretch">🎉</p>
           
-          <h2 className="text-lg font-semibold text-gray-900 leading-tight">¡Tu Agente IA para calificar clientes potenciales está listo!</h2>
+          <h2 className="text-lg font-semibold text-gray-900 leading-tight">¡Tu Agente IA para lograr un objetivo está listo!</h2>
 
           {/* Divider */}
           <div className="w-full max-w-[241px] border-t border-dashed border-[#D5D5DE]"></div>

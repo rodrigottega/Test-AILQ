@@ -4,13 +4,14 @@ import { PlusIcon } from './icons/PlusIcon';
 export interface Template {
     icon: string;
     title: string;
-    fields: string[];
+    objective: string;
+    objectiveIcon: string;
     description: string;
 }
 
 interface TemplateCardProps {
     template: Template;
-    onTemplateClick: (fields: string[]) => void;
+    onTemplateClick: (objective: string) => void;
     isTyping: boolean;
 }
 
@@ -30,7 +31,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onTemplateClick, 
                   onMouseLeave={() => setHovered(false)}
                 >
                   <button
-                    onClick={() => onTemplateClick(template.fields)}
+                    onClick={() => onTemplateClick(template.objective)}
                     disabled={isTyping}
                     className="box-border flex justify-center items-center w-6 h-6 min-w-[24px] max-w-[24px] h-6 min-h-[24px] max-h-[24px] bg-white border border-[#EBEBF0] rounded text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
@@ -56,9 +57,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onTemplateClick, 
             <div className="flex flex-col items-start gap-3 self-stretch">
                 <p className="text-sm font-medium text-gray-900">{template.title}</p>
                 <div className="flex flex-row flex-wrap gap-2">
-                  {template.fields.map((field) => (
-                    <span key={field} className="px-2 py-0.5 text-xs bg-[#FAFAFC] border border-[#EBEBF0] rounded-full text-gray-700">{field}</span>
-                  ))}
+                   <span className="px-2 py-0.5 text-xs bg-[#FAFAFC] border border-[#EBEBF0] rounded text-gray-700">{template.objectiveIcon} {template.objective}</span>
                 </div>
             </div>
             {/* Description */}

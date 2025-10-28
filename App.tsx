@@ -5,124 +5,73 @@ import DataCollectionCard from './components/DataCollectionCard';
 import KnowledgeBaseCard from './components/KnowledgeBaseCard';
 import AgentCreatorScreen from './components/AgentCreatorScreen';
 import LoadingScreen from './components/LoadingScreen';
-import { Question } from './components/DataCollectionContent';
 import FinalScreen from './components/FinalScreen';
 import TemplateCard, { Template } from './components/TemplateCard';
-import SaveDataModal from './components/SaveDataModal';
 
 const templates: Template[] = [
     {
       icon: '🎓',
       title: 'Educación',
-      fields: ['Nombre', 'Programa de interés', 'País / Región', 'Matrícula'],
-      description: 'Perfila estudiantes de acuerdo al interés del programa educativo.',
+      objective: 'Inscripción a programa',
+      objectiveIcon: '🚀',
+      description: 'El Agente IA responde a las preguntas de los candidatos hasta conseguir llevarlos al link de inscripción.',
     },
     {
       icon: '🏡',
       title: 'Bienes Raíces',
-      fields: ['Nombre', 'Presupuesto', 'Edad', 'País / Región'],
-      description: 'Perfila clientes potenciales de acuerdo a su presupuesto y lugar de residencia.',
+      objective: 'Agendar cita',
+      objectiveIcon: '🗓️',
+      description: 'El Agente IA responde a las preguntas de los clientes hasta conseguir agendar una cita con un Asesor inmobiliario.',
     },
     {
-      icon: '💳',
-      title: 'Servicios financieros',
-      fields: ['Nombre', 'Edad', 'País / Región', 'Tipo de crédito'],
-      description: 'Recolecta datos importantes para poder crear un perfil crediticio adecuado.',
+      icon: '👟',
+      title: 'Tienda en línea',
+      objective: 'Compra en línea',
+      objectiveIcon: '🛍️',
+      description: 'El Agente IA responde a las preguntas de los usuarios hasta conseguir llevarlos al link de compra.',
     },
     {
       icon: '🏥',
       title: 'Clínicas de salud',
-      fields: ['Nombre', 'Email', 'País / Región', 'Tipo de Sangre'],
-      description: 'Recolecta datos importantes para poder agendar una cita de valoración.',
+      objective: 'Agendar cita',
+      objectiveIcon: '🗓️',
+      description: 'El Agente IA responde a las preguntas de los pacientes hasta conseguir agendar una cita en la clínica.',
     },
 ];
 
 // Fix: Changed function declaration to a const with React.FC type to resolve "Cannot find namespace 'JSX'" error and align with component patterns in the project.
 const App: React.FC = () => {
   const [step, setStep] = React.useState(1);
-  const [instruction, setInstruction] = React.useState('');
+  const [objective, setObjective] = React.useState('');
   const [isCreatingAgent, setIsCreatingAgent] = React.useState(false);
   const [isAgentCreated, setIsAgentCreated] = React.useState(false);
   const [isAgentFinalized, setIsAgentFinalized] = React.useState(false);
   const [url, setUrl] = React.useState('');
-  const [questions, setQuestions] = React.useState<Question[]>([]);
-  const [selectedIntegration, setSelectedIntegration] = React.useState<'HubSpot' | 'Sheets' | 'Treble'>('HubSpot');
-  const [isHighlighting, setIsHighlighting] = React.useState(false);
   const [isTyping, setIsTyping] = React.useState(false);
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const [showSaveModal, setShowSaveModal] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleTemplateClick = (fields: string[]) => {
-    if (isTyping || !fields || fields.length === 0) return;
+  const handleTemplateClick = (objectiveText: string) => {
+    if (isTyping || !objectiveText) return;
 
-    const formattedFields = fields.length > 1
-      ? `${fields.slice(0, -1).join(', ')} y ${fields.slice(-1)}`
-      : fields[0];
-
-    const fullInstruction = `Debes recolectar ${formattedFields}`;
-    
-    setInstruction(''); // Clear the textarea
-    setIsHighlighting(true);
-    textareaRef.current?.focus();
+    setObjective(''); // Clear the input
+    inputRef.current?.focus();
     setIsTyping(true);
 
     let i = 0;
     const typingInterval = setInterval(() => {
       i++;
-      setInstruction(fullInstruction.substring(0, i));
-      if (i >= fullInstruction.length) {
+      setObjective(objectiveText.substring(0, i));
+      if (i >= objectiveText.length) {
         clearInterval(typingInterval);
         setIsTyping(false);
-        setIsHighlighting(false);
       }
     }, 40); // Typing speed in ms
   };
 
-  const parseInstructionToFields = (instructionText: string): string[] => {
-    if (!instructionText) return [];
-    
-    let cleanedInstruction = instructionText
-      .replace(/debes recolectar datos como/i, '')
-      .replace(/recolectar datos como/i, '')
-      .replace(/obtener el/i, '')
-      .replace(/pedir/i, '')
-      .replace(/necesito saber/i, '')
-      .replace(/averiguar el/i, '')
-      .replace(/debes recolectar/i, '')
-      .replace(/recolecta datos como/i, '')
-      .replace(/recolecta/i, '')
-      .replace(/\./g, '')
-      .trim();
-
-    cleanedInstruction = cleanedInstruction.replace(/ y /gi, ', ');
-
-    const fields = cleanedInstruction
-      .split(',')
-      .map(field => field.trim())
-      .filter(field => field.length > 0);
-
-    return fields;
-  };
-
-  const processInstructionAndShowModal = () => {
-    if (instruction.trim() !== '') {
-        const fields = parseInstructionToFields(instruction);
-        
-        const newQuestions: Question[] = (fields.length > 0 ? fields : ['Nombre', 'Email'])
-            .map((field, index) => ({
-                id: Date.now() + index,
-                text: field.charAt(0).toUpperCase() + field.slice(1),
-                saveTo: '',
-            }));
-
-        setQuestions(newQuestions);
-        setShowSaveModal(true);
+  const handleProceedToKnowledgeBase = () => {
+    if (objective.trim() !== '') {
+        setStep(2); // Go directly to the knowledge base screen
     }
-  };
-
-  const handleModalContinue = () => {
-    setShowSaveModal(false);
-    setStep(2); // Proceed to knowledge base screen
   };
 
   const handleCreateAgent = () => {
@@ -147,7 +96,13 @@ const App: React.FC = () => {
   }
 
   if (isAgentCreated) {
-    return <AgentCreatorScreen url={url} setUrl={setUrl} questions={questions} setQuestions={setQuestions} onSaveAndContinue={handleSaveAndContinue} selectedIntegration={selectedIntegration} setSelectedIntegration={setSelectedIntegration} />;
+    return <AgentCreatorScreen 
+              objective={objective} 
+              setObjective={setObjective} 
+              url={url} 
+              setUrl={setUrl} 
+              onSaveAndContinue={handleSaveAndContinue} 
+            />;
   }
 
   return (
@@ -161,16 +116,15 @@ const App: React.FC = () => {
                     <span className="text-[52px]" aria-hidden="true">🤖</span>
                 </div>
                 <h2 className="text-xl font-medium text-gray-900 text-center mt-4">
-                    Dile al Agente IA qué datos debe recolectar
+                    Dile al Agente IA qué objetivo debe lograr
                 </h2>
                 <div className="w-full mt-6">
                     <DataCollectionCard 
-                        instruction={instruction}
-                        setInstruction={setInstruction}
-                        onCreateAgent={processInstructionAndShowModal}
-                        isHighlighting={isHighlighting}
+                        objective={objective}
+                        setObjective={setObjective}
+                        onCreateAgent={handleProceedToKnowledgeBase}
                         isTyping={isTyping}
-                        textareaRef={textareaRef}
+                        inputRef={inputRef}
                     />
                 </div>
             </div>
@@ -196,17 +150,6 @@ const App: React.FC = () => {
           />
         )}
       </main>
-      {showSaveModal && (
-        <SaveDataModal
-          isOpen={showSaveModal}
-          onClose={() => setShowSaveModal(false)}
-          onContinue={handleModalContinue}
-          questions={questions}
-          setQuestions={setQuestions}
-          selectedIntegration={selectedIntegration}
-          setSelectedIntegration={setSelectedIntegration}
-        />
-      )}
     </div>
   );
 };

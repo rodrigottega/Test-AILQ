@@ -1,25 +1,24 @@
 import * as React from 'react';
 import AgentCreatorHeader from './AgentCreatorHeader';
 import Sidebar from './Sidebar';
-import DataCollectionContent, { Question } from './DataCollectionContent';
+import ObjectiveContent from './ObjectiveContent';
 import GeneralInstructionsContent from './GeneralInstructionsContent';
 import KnowledgeBaseContent from './KnowledgeBaseContent';
 import TestBox from './TestBox';
 import AgentReadyModal from './AgentReadyModal';
 
 interface AgentCreatorScreenProps {
+  objective: string;
+  setObjective: React.Dispatch<React.SetStateAction<string>>;
   url: string;
   setUrl: React.Dispatch<React.SetStateAction<string>>;
-  questions: Question[];
-  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
   onSaveAndContinue: () => void;
-  selectedIntegration: 'HubSpot' | 'Sheets' | 'Treble';
-  setSelectedIntegration: React.Dispatch<React.SetStateAction<'HubSpot' | 'Sheets' | 'Treble'>>;
 }
 
-const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ url, setUrl, questions, setQuestions, onSaveAndContinue, selectedIntegration, setSelectedIntegration }) => {
-  const [activeTab, setActiveTab] = React.useState('Datos para recolectar');
+const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ objective, setObjective, url, setUrl, onSaveAndContinue }) => {
+  const [activeTab, setActiveTab] = React.useState('Objetivo que se debe lograr');
   const [showModal, setShowModal] = React.useState(false);
+  const [isObjectiveAlertVisible, setIsObjectiveAlertVisible] = React.useState(true);
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,7 +31,7 @@ const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ url, setUrl, qu
 
   return (
     <div className="h-screen w-full bg-[#FAFAFC] flex flex-col">
-      <AgentCreatorHeader onSaveAndContinue={onSaveAndContinue} />
+      <AgentCreatorHeader onSaveAndContinue={onSaveAndContinue} objective={objective} />
       <main className="p-4 flex-grow overflow-auto flex justify-center">
         <div 
             className="box-border flex flex-row items-start p-4 gap-8 w-full max-w-[1400px] h-full bg-white border border-[#EBEBF0] rounded-lg"
@@ -42,11 +41,17 @@ const AgentCreatorScreen: React.FC<AgentCreatorScreenProps> = ({ url, setUrl, qu
         >
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className="flex-grow h-full rounded overflow-hidden">
-                {activeTab === 'Datos para recolectar' && <DataCollectionContent questions={questions} setQuestions={setQuestions} selectedIntegration={selectedIntegration} setSelectedIntegration={setSelectedIntegration} />}
+                {activeTab === 'Objetivo que se debe lograr' && <ObjectiveContent 
+                                                                objective={objective} 
+                                                                setObjective={setObjective} 
+                                                                showAlert={isObjectiveAlertVisible}
+                                                                setShowAlert={setIsObjectiveAlertVisible}
+                                                                setActiveTab={setActiveTab}
+                                                              />}
                 {activeTab === 'Instrucciones generales' && <GeneralInstructionsContent />}
                 {activeTab === 'Base de conocimiento' && <KnowledgeBaseContent url={url} setUrl={setUrl} />}
             </div>
-            <TestBox questions={questions} />
+            <TestBox />
         </div>
       </main>
       {showModal && <AgentReadyModal onClose={() => setShowModal(false)} />}

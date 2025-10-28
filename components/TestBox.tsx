@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Question } from './DataCollectionContent';
 import { RefreshIcon } from './icons/RefreshIcon';
 import ChatBubble from './ChatBubble';
 
@@ -9,11 +8,7 @@ export interface Message {
     sender: 'user' | 'bot';
 }
 
-interface TestBoxProps {
-    questions: Question[];
-}
-
-const TestBox: React.FC<TestBoxProps> = ({ questions }) => {
+const TestBox: React.FC = () => {
     const [messages, setMessages] = React.useState<Message[]>([]);
     const [inputValue, setInputValue] = React.useState('');
     const [isChatting, setIsChatting] = React.useState(false);
@@ -24,67 +19,11 @@ const TestBox: React.FC<TestBoxProps> = ({ questions }) => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const generateBotQuestion = (instruction: string): string => {
-        if (!instruction || instruction.trim() === '') {
-            return '¿Necesitas algo más?';
-        }
-
-        // Sanitize and extract the core subject from the instruction
-        let subject = instruction.toLowerCase();
-        const prefixes = [
-            'pregunta amablemente por el', 
-            'pregunta amablemente por la', 
-            'pregunta por el', 
-            'pregunta por la', 
-            'pide el', 
-            'pide la'
-        ];
-        const suffixes = ['del cliente', 'al cliente'];
-
-        for (const prefix of prefixes) {
-            if (subject.startsWith(prefix)) {
-                subject = subject.substring(prefix.length).trim();
-                break;
-            }
-        }
-        for (const suffix of suffixes) {
-            if (subject.endsWith(suffix)) {
-                subject = subject.substring(0, subject.length - suffix.length).trim();
-                break;
-            }
-        }
-
-        // Specific overrides for better phrasing, based on examples
-        if (subject.includes('email') || subject.includes('correo')) {
-            return `¿Me podrías compartir un correo electrónico por favor?`;
-        }
-        if (subject.includes('nombre')) {
-            return `¿Podrías indicarme tu nombre?`;
-        }
-        if (subject.includes('fecha de nacimiento')) {
-            return `¿Cuál es tu fecha de nacimiento?`;
-        }
-         if (subject.includes('presupuesto')) {
-            return `¿Con qué presupuesto cuentas actualmente?`;
-        }
-
-        // Generic template for anything else
-        return `¿Cuál es tu ${subject}?`;
-    };
-
-    const getBotResponse = (currentMessages: Message[]) => {
-        const botMessageCount = currentMessages.filter(m => m.sender === 'bot').length;
-        if (botMessageCount < questions.length) {
-            const nextQuestionInstruction = questions[botMessageCount].text;
-            return generateBotQuestion(nextQuestionInstruction);
-        }
-        return 'Gracias por tu información. Hemos terminado por ahora.';
-    };
-
     const handleSendMessage = () => {
         if (inputValue.trim() === '') return;
 
-        if (!isChatting) {
+        const firstMessage = !isChatting;
+        if (firstMessage) {
             setIsChatting(true);
         }
 
@@ -94,12 +33,14 @@ const TestBox: React.FC<TestBoxProps> = ({ questions }) => {
             sender: 'user',
         };
         
-        const updatedMessages = [...messages, newUserMessage];
-        setMessages(updatedMessages);
+        setMessages(prev => [...prev, newUserMessage]);
         setInputValue('');
 
         setTimeout(() => {
-            const botResponseText = getBotResponse(updatedMessages);
+            const botResponseText = firstMessage 
+                ? "¡Hola! He recibido tu primer mensaje. Estoy aquí para ayudarte a lograr tu objetivo."
+                : "Gracias por tu mensaje. En este momento, soy un bot de prueba.";
+
             const newBotMessage: Message = {
                 id: Date.now() + 1,
                 text: botResponseText,

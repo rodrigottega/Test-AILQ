@@ -6,9 +6,10 @@ import { ButtonSpinnerIcon } from './icons/ButtonSpinnerIcon';
 
 interface AgentCreatorHeaderProps {
   onSaveAndContinue: () => void;
+  objective: string;
 }
 
-const AgentCreatorHeader: React.FC<AgentCreatorHeaderProps> = ({ onSaveAndContinue }) => {
+const AgentCreatorHeader: React.FC<AgentCreatorHeaderProps> = ({ onSaveAndContinue, objective }) => {
   const [isSaving, setIsSaving] = React.useState(false);
 
   const handleSaveClick = () => {
@@ -18,6 +19,25 @@ const AgentCreatorHeader: React.FC<AgentCreatorHeaderProps> = ({ onSaveAndContin
         onSaveAndContinue();
     }, 2000);
   };
+  
+  const getAgentTitle = (objectiveText: string) => {
+      if (!objectiveText) return { name: 'Nuevo Agente', goal: 'Define un objetivo' };
+      const lowerObjective = objectiveText.toLowerCase();
+
+      if (lowerObjective.includes('cita')) {
+          return { name: 'Agente para citas', goal: 'Logra un objetivo concreto' };
+      }
+      if (lowerObjective.includes('inscripción') || lowerObjective.includes('programa')) {
+          return { name: 'Agente de inscripción', goal: 'Inscripción a programa' };
+      }
+      if (lowerObjective.includes('compra')) {
+          return { name: 'Agente de ventas', goal: 'Compra en línea' };
+      }
+      return { name: 'Agente para primer contacto', goal: 'Califica clientes potenciales' };
+  };
+  
+  const { name, goal } = getAgentTitle(objective);
+
 
   return (
     <header className="w-full bg-white border-b border-gray-200">
@@ -34,7 +54,7 @@ const AgentCreatorHeader: React.FC<AgentCreatorHeaderProps> = ({ onSaveAndContin
                 <EditIcon />
             </button>
             <h1 className="text-sm text-gray-900">
-                Agente para primer contacto / <span className="text-gray-500">Califica clientes potenciales</span>
+                {name} / <span className="text-gray-500">{goal}</span>
             </h1>
         </div>
 

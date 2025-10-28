@@ -22,31 +22,36 @@ const GeneralInstructionsContent: React.FC = () => {
     const initialInstructions = [
       {
         id: 1,
+        label: 'Primer mensaje del Agente IA:',
+        value: 'Hola soy tu Agente IA, cómo puedo ayudarte hoy?',
+      },
+      {
+        id: 2,
         label: 'Rol:',
         value: 'Eres un Agente IA especializado en calificación de clientes potenciales.',
       },
       {
-        id: 2,
+        id: 3,
         label: 'Tarea:',
         value: 'Solicitar de manera amable y respetuosa información clave inicial antes de comenzar la interacción.',
       },
       {
-        id: 3,
+        id: 4,
         label: 'Detalles:',
         value: 'Comunícate en tono neutral y profesional y limita cada respuesta a máximo tres oraciones cortas.',
       },
       {
-        id: 4,
+        id: 5,
         label: 'Contexto:',
         value: 'El objetivo es facilitar la calificación rápida de leads y mantener una comunicación clara y respetuosa con potenciales clientes.',
       },
       {
-        id: 5,
+        id: 6,
         label: 'Ejemplos:',
         value: '• "¿Podrías indicarme tu nombre?"\n• "¿Con qué presupuesto cuentas actualmente?"\n• "¿Me podrías compartir un correo electrónico por favor?"',
       },
       {
-        id: 6,
+        id: 7,
         label: 'Notas:',
         value: 'No uses tecnicismos ni lenguaje complejo. Prioriza siempre la claridad y la amabilidad.',
       },
