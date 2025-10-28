@@ -39,7 +39,7 @@ const DataCollectionCard: React.FC<ObjectiveCardProps> = ({ objective, setObject
   return (
     <div className="flex flex-col items-center gap-6 w-full">
       <div className="flex flex-col items-center">
-        <div className="box-border flex flex-row justify-center items-center p-4 gap-2.5 w-[245px] h-[50px] bg-white border border-[#CEE0FF] rounded-full text-[#1A3162] text-base font-medium">
+        <div className="box-border flex flex-row justify-center items-center py-3 px-6 gap-2.5 w-auto bg-white border border-[#CEE0FF] rounded-full text-[#1A3162] text-base font-medium whitespace-nowrap">
           Responder dudas / preguntas
         </div>
         

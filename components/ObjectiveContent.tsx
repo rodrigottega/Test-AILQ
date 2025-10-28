@@ -48,7 +48,7 @@ const ObjectiveContent: React.FC<ObjectiveContentProps> = ({ objective, setObjec
       )}
 
       <div className="flex flex-col justify-center items-center py-10 w-full bg-[#F7F8FF] rounded-lg">
-        <div className="box-border flex flex-row justify-center items-center px-6 py-3 gap-2.5 bg-white border border-[#CEE0FF] rounded-full text-gray-800 text-base">
+        <div className="box-border flex flex-row justify-center items-center px-6 py-3 gap-2.5 w-auto bg-white border border-[#CEE0FF] rounded-full text-[#1A3162] text-base whitespace-nowrap">
           Responder dudas / preguntas
         </div>
         
