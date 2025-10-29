@@ -28,12 +28,12 @@ const GeneralInstructionsContent: React.FC = () => {
       {
         id: 2,
         label: 'Rol:',
-        value: 'Eres un Agente IA especializado en calificación de clientes potenciales.',
+        value: 'Eres un Agente IA especializado en responder preguntas para llevar a los leads a un objetivo',
       },
       {
         id: 3,
         label: 'Tarea:',
-        value: 'Solicitar de manera amable y respetuosa información clave inicial antes de comenzar la interacción.',
+        value: 'Entender qué es exactamente lo que los clientes necesitan, para buscar la información requerida en la base de conocimiento y responder de forma con dichos datos.',
       },
       {
         id: 4,
@@ -43,12 +43,12 @@ const GeneralInstructionsContent: React.FC = () => {
       {
         id: 5,
         label: 'Contexto:',
-        value: 'El objetivo es facilitar la calificación rápida de leads y mantener una comunicación clara y respetuosa con potenciales clientes.',
+        value: 'El objetivo es facilitar la información que sea solicitada de forma clara y respetuosa',
       },
       {
         id: 6,
         label: 'Ejemplos:',
-        value: '• "¿Podrías indicarme tu nombre?"\n• "¿Con qué presupuesto cuentas actualmente?"\n• "¿Me podrías compartir un correo electrónico por favor?"',
+        value: '• "Con gusto puedo ayudarte"\n• "¿De este (tema) hay algo en particular que te gustaría saber?"\n• "¿Esta información te resuelve las dudas?"',
       },
       {
         id: 7,
