@@ -24,7 +24,7 @@ const ObjectiveContent: React.FC<ObjectiveContentProps> = ({ objective, setObjec
   };
 
   return (
-    <div className="flex flex-col h-full w-full max-w-[576px] gap-4">
+    <div className="flex flex-col h-full w-full max-w-[576px] gap-4 overflow-y-auto pr-2">
       <div className="flex flex-col items-start gap-2 self-stretch">
         <h2 className="text-base font-medium text-gray-900">Objetivo que se debe lograr</h2>
         <p className="text-sm text-gray-600">Define cuál es el objetivo que debe lograr el Agente IA.</p>
@@ -65,7 +65,7 @@ const ObjectiveContent: React.FC<ObjectiveContentProps> = ({ objective, setObjec
                 <div className="w-px h-6 bg-[#5087FF]"></div>
             </div>
 
-            <div className="w-[452px]">
+            <div className="w-full max-w-[452px]">
                 <input
                     type="text"
                     value={objective}
@@ -91,7 +91,7 @@ const ObjectiveContent: React.FC<ObjectiveContentProps> = ({ objective, setObjec
             
             <div className="w-px h-6 bg-[#5087FF] my-3"></div>
 
-            <div className="box-border flex flex-row justify-center items-center py-2 px-3 gap-2.5 w-[423px] h-12 bg-white border border-[#EBEBF0] rounded">
+            <div className="box-border flex flex-row flex-wrap justify-center items-center py-2 px-3 gap-2.5 w-full max-w-[423px] min-h-12 bg-white border border-[#EBEBF0] rounded">
                 <span className="text-sm text-[#38383D]">Cuentas con:</span>
                 
                 <div className="box-border flex flex-row items-center w-auto h-8 bg-white border border-[#D5D5DE] rounded">
@@ -114,7 +114,7 @@ const ObjectiveContent: React.FC<ObjectiveContentProps> = ({ objective, setObjec
                     </button>
                 </div>
                 
-                <span className="text-sm text-[#38383D] whitespace-nowrap">mensajes para lograr el objetivo.</span>
+                <span className="text-sm text-[#38383D]">mensajes para lograr el objetivo.</span>
             </div>
         </div>
       </div>
